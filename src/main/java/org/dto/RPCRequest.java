@@ -9,7 +9,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 public class RPCRequest implements Serializable {
-
-
+    private static final long serialVersionUID = 8263906140143559604L;
 
 }
