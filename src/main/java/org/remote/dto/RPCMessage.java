@@ -1,5 +1,19 @@
 package org.remote.dto;
 
-public class RPCMessage {
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Data
+public class RPCMessage {
+    private byte messageType;
+    private byte codecType;
+    private byte compressType;
+    private Integer requestId;
+    private Object data;
 }
