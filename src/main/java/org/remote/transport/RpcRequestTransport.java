@@ -1,6 +1,6 @@
-package org.transport;
+package org.remote.transport;
 
-import org.dto.RPCRequest;
+import org.remote.dto.RPCRequest;
 
 public interface RpcRequestTransport {
 

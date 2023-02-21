@@ -1,10 +1,10 @@
-package org.dto;
+package org.remote.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.common.RPCResponseCodeConstant;
+import org.remote.constants.RPCResponseCodeConstant;
 
 import java.io.Serializable;
 

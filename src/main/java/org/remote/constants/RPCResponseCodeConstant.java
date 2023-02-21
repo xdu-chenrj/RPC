@@ -1,4 +1,4 @@
-package org.common;
+package org.remote.constants;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

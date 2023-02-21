@@ -1,4 +1,5 @@
-package org.dto;
+package org.remote.dto;
 
 public class RPCMessage {
+
 }
