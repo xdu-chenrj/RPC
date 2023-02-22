@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.remote.constants.RPCResponseCodeConstant;
+import org.remote.common.enums.RPCResponseCodeEnum;
 
 import java.io.Serializable;
 
@@ -21,7 +21,7 @@ public class RPCResponse<T> implements Serializable {
     private T data;
 
     public static <T> RPCResponse<T> success(T data, String requestId) {
-        RPCResponse<T> response = new RPCResponseBuilder<T>().code(RPCResponseCodeConstant.SUCCESS.getCode()).message(RPCResponseCodeConstant.SUCCESS.getMessage()).build();
+        RPCResponse<T> response = new RPCResponseBuilder<T>().code(RPCResponseCodeEnum.SUCCESS.getCode()).message(RPCResponseCodeEnum.SUCCESS.getMessage()).build();
         response.setRequestId(requestId);
         if (null != data) response.setData(data);
         return response;

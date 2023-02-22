@@ -1,11 +1,11 @@
-package org.remote.constants;
+package org.remote.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum RPCResponseCodeConstant {
+public enum RPCResponseCodeEnum {
     SUCCESS(200, "Remote call succeeded"),
 
     FAIL(500, "Remote call failed");
