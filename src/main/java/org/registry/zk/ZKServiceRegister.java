@@ -6,7 +6,7 @@ import java.net.InetSocketAddress;
 
 public class ZKServiceRegister implements ServiceRegistry {
     @Override
-    public void serviceRegistry(String rpcServiceName, InetSocketAddress address) {
+    public void registerService(String rpcServiceName, InetSocketAddress address) {
 
     }
 }

@@ -1,6 +1,6 @@
 package org.remote.transport;
 
-import org.remote.dto.RPCRequest;
+import org.remote.dto.RpcRequest;
 
 public interface RpcRequestTransport {
 
@@ -9,5 +9,5 @@ public interface RpcRequestTransport {
      * @param request
      * @return
      */
-    Object sendRpcRequest(RPCRequest request);
+    Object sendRpcRequest(RpcRequest request);
 }
