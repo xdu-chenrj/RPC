@@ -11,7 +11,9 @@ public class HessianSerializer implements Serializer {
     }
 
     @Override
-    public <T> T deserialize(byte[] bytes) {
+    public <T> T deserialize(byte[] bytes, Class<T> clazz) {
         return null;
     }
+
+
 }

@@ -1,6 +1,7 @@
 package org.common.extension;
 
 import lombok.extern.slf4j.Slf4j;
+import org.common.utils.StringUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,12 +17,16 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Slf4j
 public class ExtensionLoader<T> {
     private static final String SERVICE_DIRECTORY = "META-INF/extensions/";
+
     private static final Map<Class<?>, ExtensionLoader<?>> EXTENSION_LOADERS = new ConcurrentHashMap<>();
+
     private static final Map<Class<?>, Object> EXTENSION_INSTANCES = new ConcurrentHashMap<>();
 
-    private final Class<?> type;
+    private Class<?> type;
+
     private final Map<String, Holder<Object>> cachedInstances = new ConcurrentHashMap<>();
-    private final Holder<Map<String, Class<?>>> cachedClasses = new Holder<>();
+
+    private final Holder<Map<String, Class<?>>> cachedClass = new Holder<>();
 
     private ExtensionLoader(Class<?> type) {
         this.type = type;
@@ -29,15 +34,15 @@ public class ExtensionLoader<T> {
 
     public static <S> ExtensionLoader<S> getExtensionLoader(Class<S> type) {
         if (type == null) {
-            throw new IllegalArgumentException("Extension type should not be null.");
+            throw new IllegalArgumentException("extension type is null");
         }
         if (!type.isInterface()) {
-            throw new IllegalArgumentException("Extension type must be an interface.");
+            throw new IllegalArgumentException("extension type isn't an interface");
         }
         if (type.getAnnotation(SPI.class) == null) {
-            throw new IllegalArgumentException("Extension type must be annotated by @SPI");
+            throw new IllegalArgumentException("extension type isn't annotated by @SPI");
         }
-        // firstly get from cache, if not hit, create one
+
         ExtensionLoader<S> extensionLoader = (ExtensionLoader<S>) EXTENSION_LOADERS.get(type);
         if (extensionLoader == null) {
             EXTENSION_LOADERS.putIfAbsent(type, new ExtensionLoader<S>(type));
@@ -48,15 +53,13 @@ public class ExtensionLoader<T> {
 
     public T getExtension(String name) {
         if (StringUtil.isBlank(name)) {
-            throw new IllegalArgumentException("Extension name should not be null or empty.");
+            throw new IllegalArgumentException("extension name is null of empty");
         }
-        // firstly get from cache, if not hit, create one
         Holder<Object> holder = cachedInstances.get(name);
         if (holder == null) {
             cachedInstances.putIfAbsent(name, new Holder<>());
             holder = cachedInstances.get(name);
         }
-        // create a singleton if no instance exists
         Object instance = holder.get();
         if (instance == null) {
             synchronized (holder) {
@@ -70,36 +73,34 @@ public class ExtensionLoader<T> {
         return (T) instance;
     }
 
-    private T createExtension(String name) {
-        // load all extension classes of type T from file and get specific one by name
+    public T createExtension(String name) {
         Class<?> clazz = getExtensionClasses().get(name);
         if (clazz == null) {
-            throw new RuntimeException("No such extension of name " + name);
+            throw new RuntimeException("no such extension of name" + name);
         }
         T instance = (T) EXTENSION_INSTANCES.get(clazz);
         if (instance == null) {
             try {
-                EXTENSION_INSTANCES.putIfAbsent(clazz, clazz.newInstance());
+                EXTENSION_INSTANCES.put(clazz, clazz.newInstance());
                 instance = (T) EXTENSION_INSTANCES.get(clazz);
-            } catch (Exception e) {
-                log.error(e.getMessage());
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
         }
         return instance;
     }
 
-    private Map<String, Class<?>> getExtensionClasses() {
-        // get the loaded extension class from the cache
-        Map<String, Class<?>> classes = cachedClasses.get();
-        // double check
+    public Map<String, Class<?>> getExtensionClasses() {
+        Map<String, Class<?>> classes = cachedClass.get();
         if (classes == null) {
-            synchronized (cachedClasses) {
-                classes = cachedClasses.get();
+            synchronized (cachedInstances) {
+                classes = cachedClass.get();
                 if (classes == null) {
                     classes = new HashMap<>();
-                    // load all extensions from our extensions directory
                     loadDirectory(classes);
-                    cachedClasses.set(classes);
+                    cachedClass.set(classes);
                 }
             }
         }
@@ -114,8 +115,8 @@ public class ExtensionLoader<T> {
             urls = classLoader.getResources(fileName);
             if (urls != null) {
                 while (urls.hasMoreElements()) {
-                    URL resourceUrl = urls.nextElement();
-                    loadResource(extensionClasses, classLoader, resourceUrl);
+                    URL url = urls.nextElement();
+                    loadResource(extensionClasses, classLoader, url);
                 }
             }
         } catch (IOException e) {
@@ -126,21 +127,17 @@ public class ExtensionLoader<T> {
     private void loadResource(Map<String, Class<?>> extensionClasses, ClassLoader classLoader, URL resourceUrl) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resourceUrl.openStream(), UTF_8))) {
             String line;
-            // read every line
             while ((line = reader.readLine()) != null) {
-                // get index of comment
                 final int ci = line.indexOf('#');
                 if (ci >= 0) {
-                    // string after # is comment so we ignore it
-                    line = line.substring(0, ci);
+                    line = line.substring(0, ci).trim();
                 }
-                line = line.trim();
                 if (line.length() > 0) {
                     try {
                         final int ei = line.indexOf('=');
                         String name = line.substring(0, ei).trim();
                         String clazzName = line.substring(ei + 1).trim();
-                        // our SPI use key-value pair so both of them must not be empty
+                        // our SPI use key-value pair so both of them not be empty
                         if (name.length() > 0 && clazzName.length() > 0) {
                             Class<?> clazz = classLoader.loadClass(clazzName);
                             extensionClasses.put(name, clazz);
@@ -149,7 +146,6 @@ public class ExtensionLoader<T> {
                         log.error(e.getMessage());
                     }
                 }
-
             }
         } catch (IOException e) {
             log.error(e.getMessage());
