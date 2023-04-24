@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class RpcMessage {
     private byte messageType;
-    private byte codecType;
+    private byte serializeType;
     private byte compressType;
     private Integer requestId;
     private Object data;

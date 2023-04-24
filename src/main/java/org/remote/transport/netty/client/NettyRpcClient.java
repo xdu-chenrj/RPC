@@ -9,11 +9,11 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.registry.ServiceDiscovery;
 import org.common.enums.CompressTypeEnum;
 import org.common.enums.SerializationTypeEnum;
 import org.common.extension.ExtensionLoader;
 import org.common.factory.SingletonFactory;
+import org.registry.ServiceDiscovery;
 import org.remote.constants.RpcConstants;
 import org.remote.dto.RpcMessage;
 import org.remote.dto.RpcRequest;
@@ -91,7 +91,7 @@ public class NettyRpcClient implements RpcRequestTransport {
         if (channel.isActive()) {
             unprocessedRequests.put(rpcRequest.getRequestId(), resultFuture);
             RpcMessage rpcMessage = RpcMessage.builder().data(rpcRequest)
-                    .codecType(SerializationTypeEnum.HESSIAN.getCode())
+                    .serializeType(SerializationTypeEnum.HESSIAN.getCode())
                     .messageType(RpcConstants.REQUEST_TYPE)
                     .compressType(CompressTypeEnum.GZIP.getCode()).build();
             channel.writeAndFlush(rpcMessage).addListener((ChannelFutureListener) future -> {

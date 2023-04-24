@@ -2,19 +2,17 @@ package org.remote.transport.netty.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.MessageToByteEncoder;
+import lombok.extern.slf4j.Slf4j;
 import org.common.enums.CompressTypeEnum;
 import org.common.enums.SerializationTypeEnum;
 import org.common.extension.ExtensionLoader;
 import org.compress.Compress;
 import org.remote.constants.RpcConstants;
 import org.remote.dto.RpcMessage;
-import org.remote.dto.RpcRequest;
-import org.remote.dto.RpcResponse;
 import org.serialize.Serializer;
 
-import java.util.Arrays;
-
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * custom protocol decoder
@@ -35,77 +33,47 @@ import java.util.Arrays;
  * LengthFieldBasedFrameDecoder is a length-based decoder, used to solve TCP unpacking and sticking problems.
  */
 
-public class RpcMessageEncoder extends LengthFieldBasedFrameDecoder {
-    public RpcMessageEncoder() {
-        this(RpcConstants.MAX_FRAME_LENGTH, 5, 4, -9, 0);
-    }
-
-    public RpcMessageEncoder(int maxFrameLength, int lengthFieldOffset, int lengthFieldLength, int lengthAdjustment, int initialBytesToStrip) {
-        super(maxFrameLength, lengthFieldOffset, lengthFieldLength, lengthAdjustment, initialBytesToStrip);
-    }
+@Slf4j
+public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
+    private static final AtomicInteger ATOMIC_INTEGER = new AtomicInteger(0);
 
     @Override
-    protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
-        return super.decode(ctx, in);
-    }
+    protected void encode(ChannelHandlerContext channelHandlerContext, RpcMessage rpcMessage, ByteBuf byteBuf) {
+        try {
+            byteBuf.writeBytes(RpcConstants.MAGIC_NUMBER);
+            byteBuf.writeByte(RpcConstants.VERSION);
+            // full length
+            byteBuf.writerIndex(byteBuf.writerIndex() + 4);
+            byteBuf.writeByte(rpcMessage.getMessageType());
+            byteBuf.writeByte(rpcMessage.getSerializeType());
+            byteBuf.writeByte(rpcMessage.getCompressType());
+            byteBuf.writeByte(rpcMessage.getCompressType());
+            byteBuf.writeByte(ATOMIC_INTEGER.getAndIncrement());
 
-    public Object decodeFrame(ByteBuf in) {
-        checkMagicNumber(in);
-        checkVersion(in);
-        int fullLength = in.readInt();
-        Byte messageType = in.readByte();
-        Byte codeType = in.readByte();
-        Byte compressType = in.readByte();
-        int requestId = in.readInt();
-        RpcMessage rpcMessage = RpcMessage.builder().messageType(messageType).codecType(codeType).compressType(compressType).requestId(requestId).build();
+            int fullLength = RpcConstants.HEAD_LENGTH;
+            byte[] body = null;
+            if (rpcMessage.getMessageType() != RpcConstants.HEARTBEAT_REQUEST_TYPE && rpcMessage.getMessageType() != RpcConstants.HEARTBEAT_RESPONSE_TYPE) {
+                String serializeName = SerializationTypeEnum.getName(rpcMessage.getSerializeType());
+                log.info("serialize name: {}", serializeName);
+                Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(serializeName);
+                body = serializer.serialize(rpcMessage.getData());
 
-        if (messageType == RpcConstants.HEARTBEAT_REQUEST_TYPE) {
-            rpcMessage.setData(RpcConstants.PING);
-            return rpcMessage;
-        }
-        if (messageType == RpcConstants.HEARTBEAT_RESPONSE_TYPE) {
-            rpcMessage.setData(RpcConstants.PONG);
-            return rpcMessage;
-        }
-
-        int bodyLength = fullLength - RpcConstants.HEAD_LENGTH;
-        if (bodyLength > 0) {
-            byte[] body = new byte[bodyLength];
-            in.readBytes(body);
-            // decompress body
-            String compressName = CompressTypeEnum.getName(compressType);
-            Compress compress = ExtensionLoader.getExtensionLoader(Compress.class).getExtension(compressName);
-            body = compress.decompress(body);
-            // deserialize th object
-            String serializeName = SerializationTypeEnum.getName(codeType);
-            Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(serializeName);
-            if (messageType == RpcConstants.REQUEST_TYPE) {
-                RpcRequest tmpValue = serializer.deserialize(body, RpcRequest.class);
-                rpcMessage.setData(tmpValue);
-            } else {
-                RpcResponse tmpValue = serializer.deserialize(body, RpcResponse.class);
-                rpcMessage.setData(tmpValue);
+                String compressName = CompressTypeEnum.getName(rpcMessage.getCompressType());
+                log.info("compress name: {}", compressName);
+                Compress compress = ExtensionLoader.getExtensionLoader(Compress.class).getExtension(compressName);
+                body = compress.compress(body);
+                fullLength += body.length;
             }
-        }
-        return rpcMessage;
-    }
-
-
-    private void checkVersion(ByteBuf in) {
-        byte version = in.readByte();
-        if (version != RpcConstants.VERSION) {
-            throw new RuntimeException("version isn't compatible" + version);
-        }
-    }
-
-    private void checkMagicNumber(ByteBuf in) {
-        int len = RpcConstants.MAGIC_NUMBER.length;
-        byte[] tmp = new byte[len];
-        in.readBytes(tmp);
-        for (int i = 0; i < len; i++) {
-            if (tmp[i] != RpcConstants.MAGIC_NUMBER[i]) {
-                throw new IllegalArgumentException("unknown magic code: " + Arrays.toString(tmp));
+            if (body != null) {
+                byteBuf.readBytes(body);
             }
+            int writeIndex =  byteBuf.writerIndex();
+            // TODO Verification required
+            byteBuf.writerIndex(writeIndex - fullLength + RpcConstants.MAGIC_NUMBER.length + 1);
+            byteBuf.writerIndex(fullLength);
+            byteBuf.writerIndex(writeIndex);
+        } catch (Exception e) {
+            log.error("encode request error");
         }
     }
 }
