@@ -61,7 +61,7 @@ public class NettyRpcClientHandler extends ChannelInboundHandlerAdapter {
                 log.info("write idle happen {}", ctx.channel().remoteAddress());
                 Channel channel = nettyRpcClient.getChannel((InetSocketAddress) ctx.channel().remoteAddress());
                 RpcMessage rpcMessage = new RpcMessage();
-                rpcMessage.setCodecType(SerializationTypeEnum.PROTOSTUFF.getCode());
+                rpcMessage.setSerializeType(SerializationTypeEnum.PROTOSTUFF.getCode());
                 rpcMessage.setCompressType(CompressTypeEnum.GZIP.getCode());
                 rpcMessage.setMessageType(RpcConstants.HEARTBEAT_REQUEST_TYPE);
                 rpcMessage.setData(RpcConstants.PING);
