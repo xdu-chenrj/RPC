@@ -1,4 +1,7 @@
 package org.remote.transport.netty.server;
 
-public class NettyRpcServerHandler {
+import io.netty.channel.ChannelInboundHandlerAdapter;
+
+public class NettyRpcServerHandler extends ChannelInboundHandlerAdapter {
+
 }
