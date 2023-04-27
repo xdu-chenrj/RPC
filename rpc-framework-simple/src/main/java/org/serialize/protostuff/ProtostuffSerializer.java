@@ -13,7 +13,7 @@ public class ProtostuffSerializer implements Serializer {
     public byte[] serialize(Object obj) {
         Class<?> clazz = obj.getClass();
         // TODO
-        io.protostuff.Schema<?> schema = RuntimeSchema.getSchema(clazz);
+        Schema schema = RuntimeSchema.getSchema(clazz);
         byte[] bytes;
         try {
             bytes = ProtostuffIOUtil.toByteArray(obj, schema, BUFFER);
