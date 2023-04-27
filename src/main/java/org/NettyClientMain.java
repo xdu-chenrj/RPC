@@ -1,0 +1,14 @@
+package org;
+
+import org.annotation.RpcScan;
+import org.api.HelloController;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+@RpcScan(basePackages = {"org"})
+public class NettyClientMain {
+    public static void main(String[] args) throws InterruptedException {
+        AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(NettyClientMain.class);
+        HelloController helloController = (HelloController) annotationConfigApplicationContext.getBean("helloController");
+        helloController.test();
+    }
+}
