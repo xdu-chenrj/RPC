@@ -69,9 +69,15 @@
         <dependency>
             <groupId>io.protostuff</groupId>
             <artifactId>protostuff-core</artifactId>
-            <version>1.8.0</version>
+            <version>${protostuff.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
 
     </dependencies>
@@ -85,6 +91,7 @@
         <hessian.version>4.0.63</hessian.version>
         <kryo.version>5.4.0</kryo.version>
         <protostuff.version>1.8.0</protostuff.version>
+        <spring.version>6.0.6</spring.version>
 
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
