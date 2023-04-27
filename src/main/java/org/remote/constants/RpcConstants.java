@@ -14,8 +14,6 @@ public class RpcConstants {
 
     public static final byte HEARTBEAT_RESPONSE_TYPE = 4;
 
-    public static final byte RESPONSE = 5;
-
     public static final String PING = "ping";
 
     public static final String PONG = "pong";

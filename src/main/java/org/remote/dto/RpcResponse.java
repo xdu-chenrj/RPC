@@ -27,8 +27,8 @@ public class RpcResponse<T> implements Serializable {
         return response;
     }
 
-    public static <T> RpcResponse<T> fail(Integer code, String message) {
-        RpcResponse<T> response = new RpcResponseBuilder<T>().code(code).message(message).build();
+    public static <T> RpcResponse<T> fail(RpcResponseCodeEnum rpcResponseCodeEnum) {
+        RpcResponse<T> response = new RpcResponseBuilder<T>().code(rpcResponseCodeEnum.getCode()).message(rpcResponseCodeEnum.getMessage()).build();
         return response;
     }
 }
