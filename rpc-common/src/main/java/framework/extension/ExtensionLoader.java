@@ -111,7 +111,10 @@ public class ExtensionLoader<T> {
     }
 
     private void loadDirectory(Map<String, Class<?>> extensionClasses) {
+
+        // TODO DEBUG
         String fileName = ExtensionLoader.SERVICE_DIRECTORY + type.getName();
+
         try {
             Enumeration<URL> urls;
             ClassLoader classLoader = ExtensionLoader.class.getClassLoader();

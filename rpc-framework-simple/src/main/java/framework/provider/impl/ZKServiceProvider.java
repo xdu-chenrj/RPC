@@ -4,6 +4,7 @@ import framework.config.RpcServiceConfig;
 import framework.enums.RpcErrorMessageEnum;
 import framework.exception.RpcException;
 import framework.extension.ExtensionLoader;
+import framework.extension.SPI;
 import framework.provider.ServiceProvider;
 import framework.registry.ServiceRegistry;
 import framework.remote.transport.netty.server.NettyRpcServer;
