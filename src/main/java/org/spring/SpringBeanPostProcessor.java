@@ -39,8 +39,8 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
                     .service(bean)
                     .build();
             serviceProvider.publishService(rpcServiceConfig);
-            return bean;
         }
+        return bean;
     }
 
     @Override
