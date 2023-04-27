@@ -44,6 +44,12 @@
             <version>${curator.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.caucho/hessian -->
+        <dependency>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
+            <version>${hessian.version}</version>
+        </dependency>
 
     </dependencies>
 
@@ -53,6 +59,7 @@
         <netty.version>4.1.87.Final</netty.version>
         <slf4j.version>2.0.6</slf4j.version>
         <curator.version>5.1.0</curator.version>
+        <hessian.version>4.0.63</hessian.version>
 
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
