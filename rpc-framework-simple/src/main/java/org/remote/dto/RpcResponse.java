@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.common.enums.RpcResponseCodeEnum;
+import org.enums.RpcResponseCodeEnum;
 
 import java.io.Serializable;
 

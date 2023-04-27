@@ -4,10 +4,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.extern.slf4j.Slf4j;
-import org.common.enums.CompressTypeEnum;
-import org.common.enums.SerializationTypeEnum;
-import org.common.extension.ExtensionLoader;
 import org.compress.Compress;
+import org.enums.CompressTypeEnum;
+import org.enums.SerializationTypeEnum;
+import org.extension.ExtensionLoader;
 import org.remote.constants.RpcConstants;
 import org.remote.dto.RpcMessage;
 import org.serialize.Serializer;
@@ -67,7 +67,7 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
             if (body != null) {
                 byteBuf.readBytes(body);
             }
-            int writeIndex =  byteBuf.writerIndex();
+            int writeIndex = byteBuf.writerIndex();
             // TODO Verification required
             byteBuf.writerIndex(writeIndex - fullLength + RpcConstants.MAGIC_NUMBER.length + 1);
             byteBuf.writerIndex(fullLength);

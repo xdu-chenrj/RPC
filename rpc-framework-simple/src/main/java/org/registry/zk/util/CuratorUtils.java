@@ -6,12 +6,11 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
-import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
-import org.common.enums.RpcConfigEnum;
-import org.common.utils.PropertiesFileUtil;
+import org.enums.RpcConfigEnum;
+import org.utils.PropertiesFileUtil;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -53,11 +52,11 @@ public class CuratorUtils {
     }
 
     public static List<String> getChildrenNodes(CuratorFramework zkClient, String rpcServiceName) {
-        if(SERVICE_ADDRESS_MAP.containsKey(rpcServiceName)) {
+        if (SERVICE_ADDRESS_MAP.containsKey(rpcServiceName)) {
             return SERVICE_ADDRESS_MAP.get(rpcServiceName);
         }
         List<String> result = null;
-        String servicePath = ZK_REGISTER_ROOT_PATH + "/" +rpcServiceName;
+        String servicePath = ZK_REGISTER_ROOT_PATH + "/" + rpcServiceName;
         try {
             result = zkClient.getChildren().forPath(servicePath);
             SERVICE_ADDRESS_MAP.put(rpcServiceName, result);
@@ -100,8 +99,8 @@ public class CuratorUtils {
                 .retryPolicy(retryPolicy).connectString(zookeeperAddress).build();
         zkClient.start();
 
-        try{
-            if(zkClient.blockUntilConnected(30, TimeUnit.SECONDS)) {
+        try {
+            if (zkClient.blockUntilConnected(30, TimeUnit.SECONDS)) {
                 log.error("time out waiting ti connect to zk");
             }
         } catch (InterruptedException e) {

@@ -2,9 +2,9 @@ package org.proxy;
 
 import lombok.extern.slf4j.Slf4j;
 import org.annotation.RpcService;
-import org.common.enums.RpcErrorMessageEnum;
-import org.common.enums.RpcResponseCodeEnum;
-import org.common.exception.RpcException;
+import org.enums.RpcErrorMessageEnum;
+import org.enums.RpcResponseCodeEnum;
+import org.exception.RpcException;
 import org.config.RpcServiceConfig;
 import org.remote.constants.RpcConstants;
 import org.remote.dto.RpcRequest;

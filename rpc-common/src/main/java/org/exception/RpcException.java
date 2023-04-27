@@ -1,6 +1,6 @@
 package org.exception;
 
-import org.common.enums.RpcErrorMessageEnum;
+import org.enums.RpcErrorMessageEnum;
 
 public class RpcException extends RuntimeException {
     public RpcException(RpcErrorMessageEnum errorMessageEnum, String detail) {

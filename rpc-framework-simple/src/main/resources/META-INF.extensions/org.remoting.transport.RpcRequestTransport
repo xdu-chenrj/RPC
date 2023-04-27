@@ -1,2 +1,0 @@
-netty=org.remoting.transport.netty.client.NettyRpcClient
-socket=org.remoting.transport.socket.SocketRpcClient

@@ -2,9 +2,9 @@ package org.config;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.common.utils.threadpool.ThreadPoolFactoryUtil;
 import org.registry.zk.util.CuratorUtils;
 import org.remote.transport.netty.server.NettyRpcServer;
+import org.utils.threadpool.ThreadPoolFactoryUtil;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;

@@ -1,7 +1,7 @@
 package org.extension;
 
 import lombok.extern.slf4j.Slf4j;
-import org.common.utils.StringUtil;
+import org.utils.StringUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -81,7 +81,7 @@ public class ExtensionLoader<T> {
         T instance = (T) EXTENSION_INSTANCES.get(clazz);
         if (instance == null) {
             try {
-                EXTENSION_INSTANCES.put(clazz, clazz.newInstance());
+                EXTENSION_INSTANCES.putIfAbsent(clazz, clazz.newInstance());
                 instance = (T) EXTENSION_INSTANCES.get(clazz);
             } catch (InstantiationException e) {
                 throw new RuntimeException(e);

@@ -1,9 +1,9 @@
 package org.provider.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.common.enums.RpcErrorMessageEnum;
-import org.common.exception.RpcException;
-import org.common.extension.ExtensionLoader;
+import org.enums.RpcErrorMessageEnum;
+import org.exception.RpcException;
+import org.extension.ExtensionLoader;
 import org.config.RpcServiceConfig;
 import org.provider.ServiceProvider;
 import org.registry.ServiceRegistry;

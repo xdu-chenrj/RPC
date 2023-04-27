@@ -3,20 +3,21 @@ package org.spring;
 import lombok.extern.slf4j.Slf4j;
 import org.annotation.RpcReference;
 import org.annotation.RpcService;
-import org.common.enums.RpcConfigEnum;
-import org.common.extension.ExtensionLoader;
-import org.common.factory.SingletonFactory;
 import org.config.RpcServiceConfig;
+import org.extension.ExtensionLoader;
+import org.factory.SingletonFactory;
 import org.provider.ServiceProvider;
 import org.provider.impl.ZKServiceProvider;
 import org.proxy.RpcClientProxy;
 import org.remote.transport.RpcRequestTransport;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 
 @Slf4j
+@Component
 public class SpringBeanPostProcessor implements BeanPostProcessor {
 
     private final ServiceProvider serviceProvider;
@@ -49,7 +50,7 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
         Field[] declaredFields = targetClass.getDeclaredFields();
         for (Field field : declaredFields) {
             RpcReference rpcReference = field.getAnnotation(RpcReference.class);
-            if(rpcReference != null) {
+            if (rpcReference != null) {
                 RpcServiceConfig rpcServiceConfig = RpcServiceConfig.builder()
                         .group(rpcReference.group())
                         .version(rpcReference.version())

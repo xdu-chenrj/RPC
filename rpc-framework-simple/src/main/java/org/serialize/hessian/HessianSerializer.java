@@ -2,8 +2,8 @@ package org.serialize.hessian;
 
 import com.caucho.hessian.io.HessianInput;
 import com.caucho.hessian.io.HessianOutput;
-import org.common.exception.SerializationException;
-import org.common.extension.SPI;
+import org.exception.SerializationException;
+import org.extension.SPI;
 import org.serialize.Serializer;
 
 import java.io.ByteArrayInputStream;
