@@ -8,13 +8,13 @@ import org.remote.transport.netty.server.NettyRpcServer;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 @RpcScan(basePackages = {"org"})
-public class Main {
+public class NettyServerMain {
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(Main.class);
+        AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(NettyServerMain.class);
         NettyRpcServer nettyRpcServer = (NettyRpcServer) annotationConfigApplicationContext.getBean("NettyRpcServer");
 
         HelloService helloService = new HelloServiceImpl();
-        RpcServiceConfig rpcServiceConfig = RpcServiceConfig.builder().group("test2").version("version2").build();
+        RpcServiceConfig rpcServiceConfig = RpcServiceConfig.builder().group("test2").version("version2").service(helloService).build();
         nettyRpcServer.registerService(rpcServiceConfig);
         nettyRpcServer.start();
     }
