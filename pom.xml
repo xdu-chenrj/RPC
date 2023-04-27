@@ -11,7 +11,7 @@
     <modules>
         <module>api</module>
         <module>server</module>
-        <module>serviceApi</module>
+        <module>service-api</module>
     </modules>
 
     <dependencies>
