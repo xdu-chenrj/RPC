@@ -1,7 +1,6 @@
 package org;
 
 import org.annotation.RpcScan;
-import org.api.HelloController;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 @RpcScan(basePackages = {"org"})

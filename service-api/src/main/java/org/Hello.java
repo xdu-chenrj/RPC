@@ -1,4 +1,4 @@
-package org.api;
+package org;
 
 import lombok.*;
 

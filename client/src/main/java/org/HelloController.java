@@ -1,4 +1,4 @@
-package org.api;
+package org;
 
 import org.annotation.RpcReference;
 import org.springframework.stereotype.Component;
