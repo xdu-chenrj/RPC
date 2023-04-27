@@ -12,6 +12,7 @@
         <module>api</module>
         <module>server</module>
         <module>service-api</module>
+        <module>client</module>
     </modules>
 
     <dependencies>
