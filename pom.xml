@@ -9,10 +9,10 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>api</module>
         <module>server</module>
         <module>service-api</module>
         <module>client</module>
+        <module>rpc-framework-simple</module>
     </modules>
 
     <dependencies>
