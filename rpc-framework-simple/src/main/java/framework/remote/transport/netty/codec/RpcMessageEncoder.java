@@ -44,15 +44,16 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
             byteBuf.writeByte(RpcConstants.VERSION);
             // full length
             byteBuf.writerIndex(byteBuf.writerIndex() + 4);
-            byteBuf.writeByte(rpcMessage.getMessageType());
+            byte messageType = rpcMessage.getMessageType();
+            byteBuf.writeByte(messageType);
             byteBuf.writeByte(rpcMessage.getSerializeType());
-            byteBuf.writeByte(rpcMessage.getCompressType());
-            byteBuf.writeByte(rpcMessage.getCompressType());
-            byteBuf.writeByte(ATOMIC_INTEGER.getAndIncrement());
-
-            int fullLength = RpcConstants.HEAD_LENGTH;
+            byteBuf.writeByte(CompressTypeEnum.GZIP.getCode());
+            byteBuf.writeInt(ATOMIC_INTEGER.getAndIncrement());
+            // full length
             byte[] body = null;
-            if (rpcMessage.getMessageType() != RpcConstants.HEARTBEAT_REQUEST_TYPE && rpcMessage.getMessageType() != RpcConstants.HEARTBEAT_RESPONSE_TYPE) {
+            int fullLength = RpcConstants.HEAD_LENGTH;
+            if (messageType != RpcConstants.HEARTBEAT_REQUEST_TYPE
+                    && messageType != RpcConstants.HEARTBEAT_RESPONSE_TYPE) {
                 String serializeName = SerializationTypeEnum.getName(rpcMessage.getSerializeType());
                 log.info("serialize name: {}", serializeName);
                 Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(serializeName);
@@ -65,12 +66,13 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
                 fullLength += body.length;
             }
             if (body != null) {
-                byteBuf.readBytes(body);
+                // TODO
+                byteBuf.writeBytes(body);
             }
             int writeIndex = byteBuf.writerIndex();
             // TODO Verification required
             byteBuf.writerIndex(writeIndex - fullLength + RpcConstants.MAGIC_NUMBER.length + 1);
-            byteBuf.writerIndex(fullLength);
+            byteBuf.writeInt(fullLength);
             byteBuf.writerIndex(writeIndex);
         } catch (Exception e) {
             log.error("encode request error");

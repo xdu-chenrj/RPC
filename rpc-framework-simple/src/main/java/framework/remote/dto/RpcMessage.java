@@ -14,6 +14,6 @@ public class RpcMessage {
     private byte messageType;
     private byte serializeType;
     private byte compressType;
-    private Integer requestId;
+    private int requestId;
     private Object data;
 }

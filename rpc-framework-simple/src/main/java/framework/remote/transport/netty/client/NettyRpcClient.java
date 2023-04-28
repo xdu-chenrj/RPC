@@ -24,6 +24,7 @@ import framework.remote.transport.netty.codec.RpcMessageEncoder;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -76,7 +77,16 @@ public class NettyRpcClient implements RpcRequestTransport {
                 throw new IllegalStateException();
             }
         });
-        return null;
+        Channel res = null;
+        try {
+            res = completableFuture.get();
+        } catch (InterruptedException e) {
+            log.error("occur interrupt exception when connect");
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            log.error("occur execution exception when connect");
+        }
+        return res;
     }
 
 

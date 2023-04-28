@@ -12,6 +12,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import framework.compress.Compress;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 
@@ -35,6 +36,7 @@ import java.util.Arrays;
  * LengthFieldBasedFrameDecoder is a length-based decoder, used to solve TCP unpacking and sticking problems.
  */
 
+@Slf4j
 public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
     public RpcMessageDecoder() {
         this(RpcConstants.MAX_FRAME_LENGTH, 5, 4, -9, 0);
@@ -46,7 +48,21 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
 
     @Override
     protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
-        return super.decode(ctx, in);
+        Object decoded = super.decode(ctx, in);
+        if(decoded instanceof ByteBuf) {
+            ByteBuf frame = (ByteBuf) decoded;
+            if(frame.readableBytes() >= RpcConstants.TOTAL_LENGTH) {
+                try {
+                    return decodeFrame(frame);
+                } catch (Exception e) {
+                    log.error("decode frame error!" , e);
+                    throw e;
+                } finally {
+                    frame.release();
+                }
+            }
+        }
+        return decoded;
     }
 
     public Object decodeFrame(ByteBuf in) {

@@ -10,7 +10,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-@SPI
 public class HessianSerializer implements Serializer {
     @Override
     public byte[] serialize(Object obj) {

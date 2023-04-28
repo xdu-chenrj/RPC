@@ -89,13 +89,26 @@
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>
+        <junit.version>4.12</junit.version>
         <curator.version>4.2.0</curator.version>
         <lombok.version>1.18.24</lombok.version>
         <netty.version>4.1.87.Final</netty.version>
-        <slf4j.version>2.0.6</slf4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
         <curator.version>5.1.0</curator.version>
         <hessian.version>4.0.63</hessian.version>
         <kryo.version>5.4.0</kryo.version>

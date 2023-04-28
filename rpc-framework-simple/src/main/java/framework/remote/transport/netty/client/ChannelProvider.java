@@ -15,10 +15,10 @@ public class ChannelProvider {
     }
 
     public Channel get(InetSocketAddress inetSocketAddress) {
-        String key =inetSocketAddress.toString();
-        if(channelMap.containsKey(key)) {
+        String key = inetSocketAddress.toString();
+        if (channelMap.containsKey(key)) {
             Channel channel = channelMap.get(key);
-            if(channel != null && channel.isActive()) {
+            if (channel != null && channel.isActive()) {
                 return channel;
             } else {
                 channelMap.remove(key);

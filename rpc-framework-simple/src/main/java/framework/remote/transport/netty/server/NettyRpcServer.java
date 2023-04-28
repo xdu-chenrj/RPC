@@ -20,13 +20,15 @@ import framework.remote.transport.netty.codec.RpcMessageDecoder;
 import framework.remote.transport.netty.codec.RpcMessageEncoder;
 import framework.utils.RuntimeUtil;
 import framework.utils.threadpool.ThreadPoolFactoryUtil;
+import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
+@Component
 public class NettyRpcServer {
-    public static final int PORT = 8889;
+    public static final int PORT = 9998;
 
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ZKServiceProvider.class);
 
@@ -46,7 +48,11 @@ public class NettyRpcServer {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.group(boosGroup, workGroup).channel(NioServerSocketChannel.class)
                     // TODO
-                    .childOption(ChannelOption.TCP_NODELAY, true).childOption(ChannelOption.SO_KEEPALIVE, true).childOption(ChannelOption.SO_BACKLOG, 128).handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ChannelInitializer<SocketChannel>() {
+                    .childOption(ChannelOption.TCP_NODELAY, true)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true)
+                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .handler(new LoggingHandler(LogLevel.INFO))
+                    .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             ChannelPipeline p = socketChannel.pipeline();
@@ -57,7 +63,7 @@ public class NettyRpcServer {
                         }
                     });
             // TODO
-            ChannelFuture channelFuture = serverBootstrap.bind(PORT).sync();
+            ChannelFuture channelFuture = serverBootstrap.bind(host, PORT).sync();
             channelFuture.channel().closeFuture().sync();
         } catch (Exception e) {
             log.error("occur exception when start server:", e);

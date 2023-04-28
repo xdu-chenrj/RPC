@@ -86,7 +86,7 @@ public class CuratorUtils {
         Properties properties = PropertiesFileUtil.readPropertiesFile(RpcConfigEnum.RPC_CONFIG_PATH.getPropertyVal());
         String zookeeperAddress;
         if (properties != null && properties.getProperty(RpcConfigEnum.ZK_ADDRESS.getPropertyVal()) != null) {
-            zookeeperAddress = RpcConfigEnum.ZK_ADDRESS.getPropertyVal();
+            zookeeperAddress = properties.getProperty(RpcConfigEnum.ZK_ADDRESS.getPropertyVal());
         } else {
             zookeeperAddress = DEFAULT_ZOOKEEPER_ADDRESS;
         }
@@ -100,7 +100,7 @@ public class CuratorUtils {
         zkClient.start();
 
         try {
-            if (zkClient.blockUntilConnected(30, TimeUnit.SECONDS)) {
+            if (!zkClient.blockUntilConnected(30, TimeUnit.SECONDS)) {
                 log.error("time out waiting ti connect to zk");
             }
         } catch (InterruptedException e) {

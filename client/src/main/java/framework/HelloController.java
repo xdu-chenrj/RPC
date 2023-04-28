@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class HelloController {
 
-    @RpcReference(version = "version1", group = "test1")
+    @RpcReference(version = "version", group = "test")
     private HelloService helloService;
 
     public void test() throws InterruptedException {
