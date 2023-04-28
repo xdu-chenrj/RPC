@@ -20,6 +20,7 @@ public class RpcServiceConfig {
     }
 
     public String getServiceName() {
-        return this.getClass().getInterfaces()[0].getCanonicalName();
+        // TODO
+        return this.service.getClass().getInterfaces()[0].getCanonicalName();
     }
 }

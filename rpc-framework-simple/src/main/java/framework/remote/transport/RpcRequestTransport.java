@@ -1,7 +1,9 @@
 package framework.remote.transport;
 
+import framework.extension.SPI;
 import framework.remote.dto.RpcRequest;
 
+@SPI
 public interface RpcRequestTransport {
 
     /**

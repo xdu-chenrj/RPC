@@ -79,7 +79,7 @@ public class ExtensionLoader<T> {
         Class<?> clazz = getExtensionClasses().get(name);
         log.info("createExtension clazz {}", clazz);
         if (clazz == null) {
-            throw new RuntimeException("no such extension of name" + name);
+            throw new RuntimeException("no such extension of name " + name);
         }
         T instance = (T) EXTENSION_INSTANCES.get(clazz);
         if (instance == null) {
@@ -136,8 +136,9 @@ public class ExtensionLoader<T> {
             while ((line = reader.readLine()) != null) {
                 final int ci = line.indexOf('#');
                 if (ci >= 0) {
-                    line = line.substring(0, ci).trim();
+                    line = line.substring(0, ci);
                 }
+                line = line.trim();
                 if (line.length() > 0) {
                     try {
                         final int ei = line.indexOf('=');

@@ -1,0 +1,3 @@
+kyro=framework.serialize.kyro.KryoSerializer
+protostuff=framework.serialize.protostuff.ProtostuffSerializer
+hessian=framework.serialize.hessian.HessianSerializer

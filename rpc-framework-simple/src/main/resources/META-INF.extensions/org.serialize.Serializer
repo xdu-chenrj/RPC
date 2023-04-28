@@ -1,3 +1,0 @@
-kyro=org.serialize.kyro.KryoSerializer
-protostuff=org.serialize.protostuff.ProtostuffSerializer
-hessian=org.serialize.hessian.HessianSerializer

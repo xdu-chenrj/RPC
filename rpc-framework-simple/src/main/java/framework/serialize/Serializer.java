@@ -1,5 +1,8 @@
 package framework.serialize;
 
+import framework.extension.SPI;
+
+@SPI
 public interface Serializer {
     byte[] serialize(Object obj);
 

@@ -10,11 +10,11 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class NettyServerMain {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(NettyServerMain.class);
-//        NettyRpcServer nettyRpcServer = (NettyRpcServer) annotationConfigApplicationContext.getBean("nettyRpcServer");
-//
-//        HelloService helloService = new HelloServiceImpl();
-//        RpcServiceConfig rpcServiceConfig = RpcServiceConfig.builder().group("test2").version("version2").service(helloService).build();
-//        nettyRpcServer.registerService(rpcServiceConfig);
-//        nettyRpcServer.start();
+        NettyRpcServer nettyRpcServer = (NettyRpcServer) annotationConfigApplicationContext.getBean("nettyRpcServer");
+
+        HelloService helloService = new HelloServiceImpl();
+        RpcServiceConfig rpcServiceConfig = RpcServiceConfig.builder().group("test2").version("version2").service(helloService).build();
+        nettyRpcServer.registerService(rpcServiceConfig);
+        nettyRpcServer.start();
     }
 }
