@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class HelloController {
-
     @RpcReference(version = "version", group = "test")
     private HelloService helloService;
 
