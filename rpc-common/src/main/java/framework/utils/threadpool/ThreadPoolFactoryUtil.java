@@ -35,6 +35,30 @@ public class ThreadPoolFactoryUtil {
         });
     }
 
+
+    public static ExecutorService createCustomThreadPoolIfAbsent(String threadNamePrefix) {
+        CustomThreadPoolConfig customThreadPoolConfig = new CustomThreadPoolConfig();
+        return createCustomThreadPoolIfAbsent(customThreadPoolConfig, threadNamePrefix, false);
+    }
+
+    public static ExecutorService createCustomThreadPoolIfAbsent(CustomThreadPoolConfig customThreadPoolConfig, String threadNamePrefix, Boolean daemon) {
+        ExecutorService threadPool = THREAD_POOLS.computeIfAbsent(threadNamePrefix, k -> createThreadPool(customThreadPoolConfig, threadNamePrefix, daemon));
+        // 如果 threadPool 被 shutdown 的话就重新创建一个
+        if (threadPool.isShutdown() || threadPool.isTerminated()) {
+            THREAD_POOLS.remove(threadNamePrefix);
+            threadPool = createThreadPool(customThreadPoolConfig, threadNamePrefix, daemon);
+            THREAD_POOLS.put(threadNamePrefix, threadPool);
+        }
+        return threadPool;
+    }
+
+    private static ExecutorService createThreadPool(CustomThreadPoolConfig customThreadPoolConfig, String threadNamePrefix, Boolean daemon) {
+        ThreadFactory threadFactory = createThreadFactory(threadNamePrefix, daemon);
+        return new ThreadPoolExecutor(customThreadPoolConfig.getCorePoolSize(), customThreadPoolConfig.getMaximumPoolSize(),
+                customThreadPoolConfig.getKeepAliveTime(), customThreadPoolConfig.getTimeUnit(), customThreadPoolConfig.getWorkQueue(),
+                threadFactory);
+    }
+
     /**
      * create a threadFactory.
      * if threadNamePrefix is not empty, use the self built threadFactory, otherwise use defaultThreadFactory

@@ -9,7 +9,7 @@ import framework.remote.dto.RpcRequest;
 import framework.remote.dto.RpcResponse;
 import framework.remote.transport.RpcRequestTransport;
 import framework.remote.transport.netty.client.NettyRpcClient;
-import framework.remote.transport.socket.client.SocketClient;
+import framework.remote.transport.socket.client.SocketRpcClient;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -55,7 +55,7 @@ public class RpcClientProxy implements InvocationHandler {
             CompletableFuture<RpcResponse<Object>> completableFuture = (CompletableFuture<RpcResponse<Object>>) rpcRequestTransport.sendRpcRequest(rpcRequest);
             rpcResponse = completableFuture.get();
         }
-        if (rpcRequestTransport instanceof SocketClient) {
+        if (rpcRequestTransport instanceof SocketRpcClient) {
             rpcResponse = (RpcResponse<Object>) rpcRequestTransport.sendRpcRequest(rpcRequest);
         }
         this.check(rpcResponse, rpcRequest);
